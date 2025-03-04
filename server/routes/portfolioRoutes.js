@@ -1,4 +1,5 @@
 const express = require('express');
+const { getAllPortfolios } = require('../controllers/portfolioController');
 const Portfolio = require('../models/Portfolio');
 const jwt = require('jsonwebtoken');
 
@@ -24,5 +25,8 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Error saving portfolio data' });
   }
 });
+
+// Get All Portfolios
+router.get('/', getAllPortfolios);
 
 module.exports = router;
