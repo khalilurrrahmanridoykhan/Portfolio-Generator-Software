@@ -45,14 +45,16 @@ const Profile = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     const formData = new FormData();
-    formData.append('photo', photo);
+    if (photo) {
+      formData.append('photo', photo);
+    }
     formData.append('userData', JSON.stringify(userData));
 
     try {
-      await axios.put('http://localhost:5001/api/user/profile', formData, {
+      const response = await axios.put('http://localhost:5001/api/user/profile', formData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
       });
-      console.log('Profile updated successfully');
+      console.log('Profile updated successfully', response.data);
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -69,6 +71,10 @@ const Profile = () => {
         <div>
           <label>Email:</label>
           <input type="email" name="email" value={userData.email} onChange={handleChange} required />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input type="password" name="password" value={userData.password || ''} onChange={handleChange} />
         </div>
         <div>
           <label>Name:</label>

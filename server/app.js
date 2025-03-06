@@ -24,7 +24,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-app.use('/api/user', userRoutes);
+app.use('/api/user', userRoutes); // Ensure this line is present
 app.use('/api/portfolio', portfolioRoutes);
 
 // Connect to MongoDB
