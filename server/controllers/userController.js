@@ -6,6 +6,20 @@ const Projects = require('../models/Projects');
 const WorkExperience = require('../models/WorkExperience');
 const Intodec = require('../models/Intodec');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const path = require('path');
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({ storage });
 
 // Register User
 const registerUser = async (req, res) => {
@@ -84,9 +98,12 @@ const loginUser = async (req, res) => {
 // Get User Profile
 const getUserProfile = async (req, res) => {
   try {
+    console.log('Fetching user profile for user ID:', req.user.userId);
     const user = await User.findById(req.user.userId).populate('links').populate('education').populate('skills').populate('projects').populate('workExperience').populate('intodec');
+    console.log('Fetched user:', user);
     res.status(200).json(user);
   } catch (err) {
+    console.error('Error fetching user data:', err);
     res.status(500).json({ message: 'Error fetching user data' });
   }
 };
@@ -94,9 +111,22 @@ const getUserProfile = async (req, res) => {
 // Update User Profile
 const updateUserProfile = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.user.userId, req.body, { new: true }).populate('links').populate('education').populate('skills').populate('projects').populate('workExperience').populate('intodec');
+    console.log('Request file:', req.file); // Log the file
+    console.log('Request body:', req.body); // Log the body
+
+    const { userData } = JSON.parse(req.body.userData);
+    const user = await User.findById(req.user.userId);
+
+    if (req.file) {
+      user.photo = `/uploads/${req.file.filename}`;
+    }
+
+    Object.assign(user, userData);
+    await user.save();
+
     res.status(200).json(user);
   } catch (err) {
+    console.error('Error updating user data:', err);
     res.status(500).json({ message: 'Error updating user data' });
   }
 };
@@ -117,4 +147,5 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   getAllUsers,
+  upload // Export the upload middleware
 };
