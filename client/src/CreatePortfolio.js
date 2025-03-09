@@ -64,11 +64,11 @@ const CreatePortfolio = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Full Name:</label>
-          <input type="text" name="fullName" value={portfolioData.fullName} onChange={handleChange} required />
+          <input type="text" name="fullName" value={portfolioData.fullName} onChange={handleChange}  />
         </div>
         <div>
           <label>Contact Info:</label>
-          <input type="text" name="contactInfo" value={portfolioData.contactInfo} onChange={handleChange} required />
+          <input type="text" name="contactInfo" value={portfolioData.contactInfo} onChange={handleChange}  />
         </div>
         <div>
           <label>Photo URL:</label>
@@ -76,7 +76,7 @@ const CreatePortfolio = () => {
         </div>
         <div>
           <label>Bio:</label>
-          <textarea name="bio" value={portfolioData.bio} onChange={handleChange} required />
+          <textarea name="bio" value={portfolioData.bio} onChange={handleChange}  />
         </div>
         <div>
           <label>Soft Skills:</label>
@@ -91,19 +91,19 @@ const CreatePortfolio = () => {
             <h3>Academic Background {index + 1}</h3>
             <div>
               <label>Institute:</label>
-              <input type="text" name="institute" value={academic.institute} onChange={(e) => handleAcademicChange(index, e)} required />
+              <input type="text" name="institute" value={academic.institute} onChange={(e) => handleAcademicChange(index, e)}  />
             </div>
             <div>
               <label>Degree:</label>
-              <input type="text" name="degree" value={academic.degree} onChange={(e) => handleAcademicChange(index, e)} required />
+              <input type="text" name="degree" value={academic.degree} onChange={(e) => handleAcademicChange(index, e)}  />
             </div>
             <div>
               <label>Year:</label>
-              <input type="text" name="year" value={academic.year} onChange={(e) => handleAcademicChange(index, e)} required />
+              <input type="text" name="year" value={academic.year} onChange={(e) => handleAcademicChange(index, e)}  />
             </div>
             <div>
               <label>Grade:</label>
-              <input type="text" name="grade" value={academic.grade} onChange={(e) => handleAcademicChange(index, e)} required />
+              <input type="text" name="grade" value={academic.grade} onChange={(e) => handleAcademicChange(index, e)}  />
             </div>
           </div>
         ))}
@@ -112,15 +112,15 @@ const CreatePortfolio = () => {
             <h3>Work Experience {index + 1}</h3>
             <div>
               <label>Company Name:</label>
-              <input type="text" name="companyName" value={work.companyName} onChange={(e) => handleWorkChange(index, e)} required />
+              <input type="text" name="companyName" value={work.companyName} onChange={(e) => handleWorkChange(index, e)}  />
             </div>
             <div>
               <label>Job Duration:</label>
-              <input type="text" name="jobDuration" value={work.jobDuration} onChange={(e) => handleWorkChange(index, e)} required />
+              <input type="text" name="jobDuration" value={work.jobDuration} onChange={(e) => handleWorkChange(index, e)}  />
             </div>
             <div>
               <label>Job Responsibilities:</label>
-              <input type="text" name="jobResponsibilities" value={work.jobResponsibilities.join(', ')} onChange={(e) => handleWorkChange(index, e)} required />
+              <input type="text" name="jobResponsibilities" value={work.jobResponsibilities.join(', ')} onChange={(e) => handleWorkChange(index, e)}  />
             </div>
           </div>
         ))}
