@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from './axiosInstance'; // Import the custom Axios instance
 
 const CreatePortfolio = () => {
   const [portfolioData, setPortfolioData] = useState({
     fullName: '',
     contactInfo: '',
-    photoUrl: '',
     bio: '',
     skills: { softSkills: [], technicalSkills: [] },
     academicBackground: [{ institute: '', degree: '', year: '', grade: '' }],
     workExperience: [{ companyName: '', jobDuration: '', jobResponsibilities: [] }],
     projects: []
   });
+  const [photo, setPhoto] = useState(null); // New state for photo file
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -46,15 +46,27 @@ const CreatePortfolio = () => {
     setPortfolioData((prevData) => ({ ...prevData, workExperience: updatedWork }));
   };
 
+  const handlePhotoChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    const formData = new FormData();
+    if (photo) {
+      formData.append('photo', photo);
+    }
+    formData.append('portfolioData', JSON.stringify(portfolioData));
+
     try {
-      const response = await axios.post('http://localhost:5001/api/portfolio', { token, portfolioData });
+      const response = await axiosInstance.post('/portfolio', formData, {
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+      });
       console.log('Portfolio created successfully', response.data);
       navigate('/dashboard');
     } catch (error) {
-      console.error('Error creating portfolio:', error);
+      console.error('Error creating portfolio:', error.response ? error.response.data : error.message); // Add detailed error logging
     }
   };
 
@@ -71,8 +83,8 @@ const CreatePortfolio = () => {
           <input type="text" name="contactInfo" value={portfolioData.contactInfo} onChange={handleChange}  />
         </div>
         <div>
-          <label>Photo URL:</label>
-          <input type="text" name="photoUrl" value={portfolioData.photoUrl} onChange={handleChange} />
+          <label>Photo:</label>
+          <input type="file" name="photo" onChange={handlePhotoChange} />
         </div>
         <div>
           <label>Bio:</label>

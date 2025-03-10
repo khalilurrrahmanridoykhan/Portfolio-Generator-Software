@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from './axiosInstance'; // Import the custom Axios instance
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -18,7 +18,7 @@ const Profile = () => {
 
       try {
         console.log('Token:', token);
-        const response = await axios.get('http://localhost:5001/api/user/profile', {
+        const response = await axiosInstance.get('/user/profile', {
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log('Server response:', response);
@@ -51,7 +51,7 @@ const Profile = () => {
     formData.append('userData', JSON.stringify(userData));
 
     try {
-      const response = await axios.put('http://localhost:5001/api/user/profile', formData, {
+      const response = await axiosInstance.put('/user/profile', formData, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
       });
       console.log('Profile updated successfully', response.data);

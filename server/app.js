@@ -24,13 +24,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-app.use('/api/user', userRoutes); // Ensure this line is present
+app.use('/api/user', userRoutes);
 app.use('/api/portfolio', portfolioRoutes);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.log(err));
+  .catch(err => console.log('Failed to connect to MongoDB', err));
 
 // Start Server
 const port = process.env.PORT || 5001;

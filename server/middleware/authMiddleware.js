@@ -13,6 +13,9 @@ const protect = async (req, res, next) => {
       next();
     } catch (err) {
       console.error('Not authorized, token failed:', err);
+      if (err.name === 'TokenExpiredError') {
+        return res.status(401).json({ message: 'Token expired' });
+      }
       res.status(401).json({ message: 'Not authorized, token failed' });
     }
   } else {
