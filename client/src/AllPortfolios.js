@@ -44,31 +44,43 @@ const AllPortfolios = () => {
   };
 
   return (
-    <div>
-      <h2>All Portfolios</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Contact Info</th>
-            <th>Bio</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {portfolios.map((portfolio) => (
-            <tr key={portfolio._id}>
-              <td>{portfolio.fullName}</td>
-              <td>{portfolio.contactInfo}</td>
-              <td>{portfolio.bio}</td>
-              <td>
-                <button onClick={() => handleEdit(portfolio._id)}>Edit</button>
-                <button onClick={() => handleDelete(portfolio._id)}>Delete</button>
-              </td>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-4xl p-8 space-y-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center text-gray-900">All Portfolios</h2>
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Full Name</th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Contact Info</th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Bio</th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {portfolios.map((portfolio) => (
+              <tr key={portfolio._id}>
+                <td className="px-6 py-4 text-sm text-gray-900">{portfolio.fullName}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{portfolio.contactInfo}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{portfolio.bio}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">
+                  <button
+                    onClick={() => handleEdit(portfolio._id)}
+                    className="px-4 py-2 mr-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(portfolio._id)}
+                    className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

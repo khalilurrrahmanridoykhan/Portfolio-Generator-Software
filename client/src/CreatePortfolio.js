@@ -71,77 +71,79 @@ const CreatePortfolio = () => {
   };
 
   return (
-    <div>
-      <h2>Create Portfolio</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Full Name:</label>
-          <input type="text" name="fullName" value={portfolioData.fullName} onChange={handleChange}  />
-        </div>
-        <div>
-          <label>Contact Info:</label>
-          <input type="text" name="contactInfo" value={portfolioData.contactInfo} onChange={handleChange}  />
-        </div>
-        <div>
-          <label>Photo:</label>
-          <input type="file" name="photo" onChange={handlePhotoChange} />
-        </div>
-        <div>
-          <label>Bio:</label>
-          <textarea name="bio" value={portfolioData.bio} onChange={handleChange}  />
-        </div>
-        <div>
-          <label>Soft Skills:</label>
-          <input type="text" name="softSkills" value={portfolioData.skills.softSkills.join(', ')} onChange={handleSkillsChange} />
-        </div>
-        <div>
-          <label>Technical Skills:</label>
-          <input type="text" name="technicalSkills" value={portfolioData.skills.technicalSkills.join(', ')} onChange={handleSkillsChange} />
-        </div>
-        {portfolioData.academicBackground.map((academic, index) => (
-          <div key={index}>
-            <h3>Academic Background {index + 1}</h3>
-            <div>
-              <label>Institute:</label>
-              <input type="text" name="institute" value={academic.institute} onChange={(e) => handleAcademicChange(index, e)}  />
-            </div>
-            <div>
-              <label>Degree:</label>
-              <input type="text" name="degree" value={academic.degree} onChange={(e) => handleAcademicChange(index, e)}  />
-            </div>
-            <div>
-              <label>Year:</label>
-              <input type="text" name="year" value={academic.year} onChange={(e) => handleAcademicChange(index, e)}  />
-            </div>
-            <div>
-              <label>Grade:</label>
-              <input type="text" name="grade" value={academic.grade} onChange={(e) => handleAcademicChange(index, e)}  />
-            </div>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-4xl p-8 space-y-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800">Create Portfolio</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">Full Name:</label>
+            <input type="text" name="fullName" value={portfolioData.fullName} onChange={handleChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
           </div>
-        ))}
-        {portfolioData.workExperience.map((work, index) => (
-          <div key={index}>
-            <h3>Work Experience {index + 1}</h3>
-            <div>
-              <label>Company Name:</label>
-              <input type="text" name="companyName" value={work.companyName} onChange={(e) => handleWorkChange(index, e)}  />
-            </div>
-            <div>
-              <label>Job Duration:</label>
-              <input type="text" name="jobDuration" value={work.jobDuration} onChange={(e) => handleWorkChange(index, e)}  />
-            </div>
-            <div>
-              <label>Job Responsibilities:</label>
-              <input type="text" name="jobResponsibilities" value={work.jobResponsibilities.join(', ')} onChange={(e) => handleWorkChange(index, e)}  />
-            </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">Contact Info:</label>
+            <input type="text" name="contactInfo" value={portfolioData.contactInfo} onChange={handleChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
           </div>
-        ))}
-        <div>
-          <label>Projects:</label>
-          <input type="text" name="projects" value={portfolioData.projects.join(', ')} onChange={(e) => handleChange({ target: { name: 'projects', value: e.target.value.split(', ') } })} />
-        </div>
-        <button type="submit">Create Portfolio</button>
-      </form>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">Photo:</label>
+            <input type="file" name="photo" onChange={handlePhotoChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">Bio:</label>
+            <textarea name="bio" value={portfolioData.bio} onChange={handleChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">Soft Skills:</label>
+            <input type="text" name="softSkills" value={portfolioData.skills.softSkills.join(', ')} onChange={handleSkillsChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">Technical Skills:</label>
+            <input type="text" name="technicalSkills" value={portfolioData.skills.technicalSkills.join(', ')} onChange={handleSkillsChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+          </div>
+          {portfolioData.academicBackground.map((academic, index) => (
+            <div key={index}>
+              <h3 className="text-lg font-semibold text-gray-700">Academic Background {index + 1}</h3>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-600">Institute:</label>
+                <input type="text" name="institute" value={academic.institute} onChange={(e) => handleAcademicChange(index, e)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-600">Degree:</label>
+                <input type="text" name="degree" value={academic.degree} onChange={(e) => handleAcademicChange(index, e)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-600">Year:</label>
+                <input type="text" name="year" value={academic.year} onChange={(e) => handleAcademicChange(index, e)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-600">Grade:</label>
+                <input type="text" name="grade" value={academic.grade} onChange={(e) => handleAcademicChange(index, e)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+              </div>
+            </div>
+          ))}
+          {portfolioData.workExperience.map((work, index) => (
+            <div key={index}>
+              <h3 className="text-lg font-semibold text-gray-700">Work Experience {index + 1}</h3>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-600">Company Name:</label>
+                <input type="text" name="companyName" value={work.companyName} onChange={(e) => handleWorkChange(index, e)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-600">Job Duration:</label>
+                <input type="text" name="jobDuration" value={work.jobDuration} onChange={(e) => handleWorkChange(index, e)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-600">Job Responsibilities:</label>
+                <input type="text" name="jobResponsibilities" value={work.jobResponsibilities.join(', ')} onChange={(e) => handleWorkChange(index, e)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+              </div>
+            </div>
+          ))}
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">Projects:</label>
+            <input type="text" name="projects" value={portfolioData.projects.join(', ')} onChange={(e) => handleChange({ target: { name: 'projects', value: e.target.value.split(', ') } })} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+          </div>
+          <button type="submit" className="w-full px-4 py-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Create Portfolio</button>
+        </form>
+      </div>
     </div>
   );
 };
