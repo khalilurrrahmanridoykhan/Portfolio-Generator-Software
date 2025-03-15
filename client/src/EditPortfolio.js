@@ -7,13 +7,14 @@ const EditPortfolio = () => {
   const [portfolioData, setPortfolioData] = useState({
     fullName: '',
     contactInfo: '',
-    photoUrl: '',
     bio: '',
     skills: { softSkills: [], technicalSkills: [] },
     academicBackground: [{ institute: '', degree: '', year: '', grade: '' }],
     workExperience: [{ companyName: '', jobDuration: '', jobResponsibilities: [] }],
     projects: []
   });
+  const [photo, setPhoto] = useState(null); // New state for photo file
+  const [pdfFormat, setPdfFormat] = useState('default'); // New state for PDF format
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ const EditPortfolio = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setPortfolioData(response.data);
+        setPdfFormat(response.data.pdfFormat || 'default'); // Set the PDF format
       } catch (error) {
         console.error('Error fetching portfolio:', error);
         setError('Portfolio not found');
@@ -70,11 +72,24 @@ const EditPortfolio = () => {
     setPortfolioData((prevData) => ({ ...prevData, workExperience: updatedWork }));
   };
 
+  const handlePhotoChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    const formData = new FormData();
+    if (photo) {
+      formData.append('photo', photo);
+    }
+    formData.append('portfolioData', JSON.stringify(portfolioData));
+    formData.append('pdfFormat', pdfFormat); // Append the selected PDF format
+
     try {
-      const response = await axios.put(`http://localhost:5001/api/portfolio/${portfolioId}`, { token, portfolioData });
+      const response = await axios.put(`http://localhost:5001/api/portfolio/${portfolioId}`, formData, {
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+      });
       console.log('Portfolio updated successfully', response.data);
       navigate('/all-portfolios');
     } catch (error) {
@@ -112,12 +127,11 @@ const EditPortfolio = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Photo URL:</label>
+            <label className="block text-sm font-medium text-gray-700">Photo:</label>
             <input
-              type="text"
-              name="photoUrl"
-              value={portfolioData.photoUrl}
-              onChange={handleChange}
+              type="file"
+              name="photo"
+              onChange={handlePhotoChange}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
@@ -239,6 +253,14 @@ const EditPortfolio = () => {
               onChange={(e) => handleChange({ target: { name: 'projects', value: e.target.value.split(', ') } })}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">PDF Format:</label>
+            <select value={pdfFormat} onChange={(e) => setPdfFormat(e.target.value)} className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+              <option value="default">Template 1</option>
+              <option value="ridoykhanresume">Template 2</option>
+              {/* Add more options as needed */}
+            </select>
           </div>
           <button
             type="submit"

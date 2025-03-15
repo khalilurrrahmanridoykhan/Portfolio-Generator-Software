@@ -34,42 +34,30 @@ const ensureDirectoryExistence = (filePath) => {
 // Create or update Portfolio
 router.post('/', upload.single('photo'), async (req, res) => {
   const { fullName, contactInfo, bio, skills, academicBackground, workExperience, projects } = JSON.parse(req.body.portfolioData);
+  const pdfFormat = req.body.pdfFormat; // Get the selected PDF format
   const token = req.headers.authorization.split(' ')[1]; // Extract token from Authorization header
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    let portfolio = await Portfolio.findOne({ userId: decoded.userId });
 
-    if (portfolio) {
-      portfolio = await Portfolio.findByIdAndUpdate(portfolio._id, {
-        fullName,
-        contactInfo,
-        bio,
-        skills,
-        academicBackground,
-        workExperience,
-        projects,
-        photoUrl: req.file ? `/uploads/${req.file.filename}` : portfolio.photoUrl
-      }, { new: true });
-    } else {
-      portfolio = new Portfolio({
-        userId: decoded.userId,
-        fullName,
-        contactInfo,
-        bio,
-        skills,
-        academicBackground,
-        workExperience,
-        projects,
-        photoUrl: req.file ? `/uploads/${req.file.filename}` : undefined
-      });
-      await portfolio.save();
-    }
+    // Create a new portfolio
+    const portfolio = new Portfolio({
+      userId: decoded.userId,
+      fullName,
+      contactInfo,
+      bio,
+      skills,
+      academicBackground,
+      workExperience,
+      projects,
+      photoUrl: req.file ? `/uploads/${req.file.filename}` : undefined
+    });
+    await portfolio.save();
 
     // Generate PDF
     const pdfFileName = path.join(__dirname, '../portfolio', `${portfolio._id}.pdf`);
     ensureDirectoryExistence(pdfFileName);
-    await generatePortfolioPDF(portfolio, pdfFileName);
+    await generatePortfolioPDF(portfolio, pdfFileName, pdfFormat); // Pass the selected PDF format
 
     res.status(200).json(portfolio);
   } catch (err) {

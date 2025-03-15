@@ -13,6 +13,7 @@ const CreatePortfolio = () => {
     projects: []
   });
   const [photo, setPhoto] = useState(null); // New state for photo file
+  const [pdfFormat, setPdfFormat] = useState('default'); // New state for PDF format
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -58,6 +59,7 @@ const CreatePortfolio = () => {
       formData.append('photo', photo);
     }
     formData.append('portfolioData', JSON.stringify(portfolioData));
+    formData.append('pdfFormat', pdfFormat); // Append the selected PDF format
 
     try {
       const response = await axiosInstance.post('/portfolio', formData, {
@@ -140,6 +142,14 @@ const CreatePortfolio = () => {
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-600">Projects:</label>
             <input type="text" name="projects" value={portfolioData.projects.join(', ')} onChange={(e) => handleChange({ target: { name: 'projects', value: e.target.value.split(', ') } })} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-600">PDF Format:</label>
+            <select value={pdfFormat} onChange={(e) => setPdfFormat(e.target.value)} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300">
+              <option value="default">Template 1</option>
+              <option value="ridoykhanresume">Template 2</option>
+              {/* Add more options as needed */}
+            </select>
           </div>
           <button type="submit" className="w-full px-4 py-2 text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600">Create Portfolio</button>
         </form>
