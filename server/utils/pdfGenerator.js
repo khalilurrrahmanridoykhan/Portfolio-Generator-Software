@@ -1,37 +1,83 @@
-const PDFDocument = require('pdfkit');
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-const generatePortfolioPDF = (portfolioData, fileName) => {
-  const doc = new PDFDocument();
+const generatePortfolioPDF = async (portfolioData, fileName) => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
 
-  doc.pipe(fs.createWriteStream(fileName));
+  let photoHtml = '';
+  if (portfolioData.photoUrl) {
+    const photoPath = path.join(__dirname, '..', portfolioData.photoUrl);
+    if (fs.existsSync(photoPath)) {
+      const photoData = fs.readFileSync(photoPath).toString('base64');
+      const photoMimeType = path.extname(photoPath).substring(1); // Get the file extension without the dot
+      photoHtml = `
+        <div class="photo">
+          <img src="data:image/${photoMimeType};base64,${photoData}" alt="Photo" style="width: 100px; height: 100px;">
+        </div>`;
+    } else {
+      console.error(`Photo not found at path: ${photoPath}`);
+    }
+  }
 
-  // Add content to the PDF
-  doc.fontSize(25).text(portfolioData.fullName, { align: 'center' });
-  doc.moveDown();
-  doc.fontSize(15).text(`Contact Info: ${portfolioData.contactInfo}`);
-  doc.moveDown();
-  doc.fontSize(15).text(`Bio: ${portfolioData.bio}`);
-  doc.moveDown();
-  doc.fontSize(15).text('Skills:');
-  doc.fontSize(12).text(`Soft Skills: ${portfolioData.skills.softSkills.join(', ')}`);
-  doc.fontSize(12).text(`Technical Skills: ${portfolioData.skills.technicalSkills.join(', ')}`);
-  doc.moveDown();
-  doc.fontSize(15).text('Academic Background:');
-  portfolioData.academicBackground.forEach((academic) => {
-    doc.fontSize(12).text(`Institute: ${academic.institute}, Degree: ${academic.degree}, Year: ${academic.year}, Grade: ${academic.grade}`);
-  });
-  doc.moveDown();
-  doc.fontSize(15).text('Work Experience:');
-  portfolioData.workExperience.forEach((work) => {
-    doc.fontSize(12).text(`Company: ${work.companyName}, Duration: ${work.jobDuration}, Responsibilities: ${work.jobResponsibilities.join(', ')}`);
-  });
-  doc.moveDown();
-  doc.fontSize(15).text('Projects:');
-  doc.fontSize(12).text(portfolioData.projects.join(', '));
+  const htmlContent = `
+    <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; }
+          .container { width: 80%; margin: auto; }
+          .header { text-align: center; }
+          .photo { text-align: center; margin: 20px 0; }
+          .section { margin: 20px 0; }
+          .section-title { font-size: 18px; font-weight: bold; }
+          .section-content { font-size: 14px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>${portfolioData.fullName}</h1>
+          </div>
+          ${photoHtml}
+          <div class="section">
+            <div class="section-title">Contact Info:</div>
+            <div class="section-content">${portfolioData.contactInfo}</div>
+          </div>
+          <div class="section">
+            <div class="section-title">Bio:</div>
+            <div class="section-content">${portfolioData.bio}</div>
+          </div>
+          <div class="section">
+            <div class="section-title">Skills:</div>
+            <div class="section-content">Soft Skills: ${portfolioData.skills.softSkills.join(', ')}</div>
+            <div class="section-content">Technical Skills: ${portfolioData.skills.technicalSkills.join(', ')}</div>
+          </div>
+          <div class="section">
+            <div class="section-title">Academic Background:</div>
+            ${portfolioData.academicBackground.map(academic => `
+              <div class="section-content">Institute: ${academic.institute}, Degree: ${academic.degree}, Year: ${academic.year}, Grade: ${academic.grade}</div>
+            `).join('')}
+          </div>
+          <div class="section">
+            <div class="section-title">Work Experience:</div>
+            ${portfolioData.workExperience.map(work => `
+              <div class="section-content">Company: ${work.companyName}, Duration: ${work.jobDuration}, Responsibilities: ${work.jobResponsibilities.join(', ')}</div>
+            `).join('')}
+          </div>
+          <div class="section">
+            <div class="section-title">Projects:</div>
+            <div class="section-content">${portfolioData.projects.join(', ')}</div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
 
-  doc.end();
+  await page.setContent(htmlContent);
+  await page.pdf({ path: fileName, format: 'A4' });
+
+  await browser.close();
 };
 
 module.exports = generatePortfolioPDF;

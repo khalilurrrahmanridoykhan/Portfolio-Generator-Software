@@ -4,6 +4,7 @@ const Portfolio = require('../models/Portfolio');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const generatePortfolioPDF = require('../utils/pdfGenerator');
 
 const router = express.Router();
@@ -19,6 +20,16 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
+// Ensure the directory for saving PDFs exists
+const ensureDirectoryExistence = (filePath) => {
+  const dirname = path.dirname(filePath);
+  if (fs.existsSync(dirname)) {
+    return true;
+  }
+  ensureDirectoryExistence(dirname);
+  fs.mkdirSync(dirname);
+};
 
 // Create or update Portfolio
 router.post('/', upload.single('photo'), async (req, res) => {
@@ -57,7 +68,8 @@ router.post('/', upload.single('photo'), async (req, res) => {
 
     // Generate PDF
     const pdfFileName = path.join(__dirname, '../portfolio', `${portfolio._id}.pdf`);
-    generatePortfolioPDF(portfolio, pdfFileName);
+    ensureDirectoryExistence(pdfFileName);
+    await generatePortfolioPDF(portfolio, pdfFileName);
 
     res.status(200).json(portfolio);
   } catch (err) {
@@ -93,6 +105,10 @@ router.get('/:portfolioId/download', async (req, res) => {
     }
 
     const pdfFileName = path.join(__dirname, '../portfolio', `${portfolio._id}.pdf`);
+    if (!fs.existsSync(pdfFileName)) {
+      return res.status(404).json({ message: 'PDF not found' });
+    }
+
     res.download(pdfFileName);
   } catch (err) {
     res.status(500).json({ message: 'Error downloading portfolio', error: err.message });
