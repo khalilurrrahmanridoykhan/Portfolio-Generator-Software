@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const AllPortfolios = () => {
   const [portfolios, setPortfolios] = useState([]);
@@ -44,9 +44,14 @@ const AllPortfolios = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-4xl p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">All Portfolios</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-center text-gray-900">All Portfolios</h2>
+          <Link to="/create-portfolio" className="px-4 py-2 text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Create Portfolio
+          </Link>
+        </div>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

@@ -8,7 +8,9 @@ import Profile from './Profile';
 import AddUserInfo from './AddUserInfo';
 import CreatePortfolio from './CreatePortfolio';
 import AllPortfolios from './AllPortfolios';
-import EditPortfolio from './EditPortfolio'; // Import the EditPortfolio component
+import EditPortfolio from './EditPortfolio';
+import SidebarLayout from './SidebarLayout';
+import { UserProvider } from './UserContext'; // Import the UserProvider
 
 const PrivateRoute = ({ element: Component, ...rest }) => {
   const token = localStorage.getItem('token');
@@ -17,20 +19,24 @@ const PrivateRoute = ({ element: Component, ...rest }) => {
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
-          <Route path="/profile" element={<PrivateRoute element={Profile} />} />
-          <Route path="/add-user-info" element={<PrivateRoute element={AddUserInfo} />} />
-          <Route path="/create-portfolio" element={<PrivateRoute element={CreatePortfolio} />} />
-          <Route path="/all-portfolios" element={<PrivateRoute element={AllPortfolios} />} />
-          <Route path="/edit-portfolio/:portfolioId" element={<PrivateRoute element={EditPortfolio} />} /> {/* Add the edit-portfolio route */}
-        </Routes>
-      </div>
-    </Router>
+    <UserProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route element={<SidebarLayout />}>
+              <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
+              <Route path="/profile" element={<PrivateRoute element={Profile} />} />
+              <Route path="/add-user-info" element={<PrivateRoute element={AddUserInfo} />} />
+              <Route path="/create-portfolio" element={<PrivateRoute element={CreatePortfolio} />} />
+              <Route path="/all-portfolios" element={<PrivateRoute element={AllPortfolios} />} />
+              <Route path="/edit-portfolio/:portfolioId" element={<PrivateRoute element={EditPortfolio} />} />
+            </Route>
+          </Routes>
+        </div>
+      </Router>
+    </UserProvider>
   );
 }
 
