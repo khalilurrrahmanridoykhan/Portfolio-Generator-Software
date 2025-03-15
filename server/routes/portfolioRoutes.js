@@ -84,6 +84,21 @@ router.get('/:portfolioId', async (req, res) => {
   }
 });
 
+// Download Portfolio PDF by ID
+router.get('/:portfolioId/download', async (req, res) => {
+  try {
+    const portfolio = await Portfolio.findById(req.params.portfolioId);
+    if (!portfolio) {
+      return res.status(404).json({ message: 'Portfolio not found' });
+    }
+
+    const pdfFileName = path.join(__dirname, '../portfolio', `${portfolio._id}.pdf`);
+    res.download(pdfFileName);
+  } catch (err) {
+    res.status(500).json({ message: 'Error downloading portfolio', error: err.message });
+  }
+});
+
 // Update Portfolio by ID
 router.put('/:portfolioId', async (req, res) => {
   const { token, portfolioData } = req.body;

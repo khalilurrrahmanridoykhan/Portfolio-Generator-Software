@@ -43,6 +43,25 @@ const AllPortfolios = () => {
     }
   };
 
+  const handleDownload = async (portfolioId) => {
+    const token = localStorage.getItem('token');
+    console.log('Downloading portfolio with ID:', portfolioId); // Add this line to log the portfolio ID
+    try {
+      const response = await axios.get(`http://localhost:5001/api/portfolio/${portfolioId}/download`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob' // Important for downloading files
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `portfolio_${portfolioId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error downloading portfolio:', error);
+    }
+  };
+
   return (
     <div className="flex justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-4xl p-8 space-y-6 bg-white rounded-lg shadow-md">
@@ -59,6 +78,7 @@ const AllPortfolios = () => {
               <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Contact Info</th>
               <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Bio</th>
               <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Actions</th>
+              <th className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">Download Portfolio</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -79,6 +99,14 @@ const AllPortfolios = () => {
                     className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   >
                     Delete
+                  </button>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-900">
+                  <button
+                    onClick={() => handleDownload(portfolio._id)}
+                    className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Download
                   </button>
                 </td>
               </tr>
