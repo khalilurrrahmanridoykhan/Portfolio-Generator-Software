@@ -7,10 +7,10 @@ const CreatePortfolio = () => {
     fullName: '',
     contactInfo: '',
     bio: '',
-    skills: { softSkills: [], technicalSkills: [] },
+    skills: { softSkills: [''], technicalSkills: [''] },
     academicBackground: [{ institute: '', degree: '', year: '', grade: '' }],
     workExperience: [{ companyName: '', jobDuration: '', jobResponsibilities: [] }],
-    projects: []
+    projects: ['']
   });
   const [photo, setPhoto] = useState(null); // New state for photo file
   const [pdfFormat, setPdfFormat] = useState('default'); // New state for PDF format
@@ -21,11 +21,19 @@ const CreatePortfolio = () => {
     setPortfolioData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSkillsChange = (e) => {
-    const { name, value } = e.target;
+  const handleSkillsChange = (index, type, value) => {
+    const updatedSkills = [...portfolioData.skills[type]];
+    updatedSkills[index] = value;
     setPortfolioData((prevData) => ({
       ...prevData,
-      skills: { ...prevData.skills, [name]: value.split(', ') }
+      skills: { ...prevData.skills, [type]: updatedSkills }
+    }));
+  };
+
+  const addSkillField = (type) => {
+    setPortfolioData((prevData) => ({
+      ...prevData,
+      skills: { ...prevData.skills, [type]: [...prevData.skills[type], ''] }
     }));
   };
 
@@ -34,6 +42,13 @@ const CreatePortfolio = () => {
     const updatedAcademic = [...portfolioData.academicBackground];
     updatedAcademic[index][name] = value;
     setPortfolioData((prevData) => ({ ...prevData, academicBackground: updatedAcademic }));
+  };
+
+  const addAcademicField = () => {
+    setPortfolioData((prevData) => ({
+      ...prevData,
+      academicBackground: [...prevData.academicBackground, { institute: '', degree: '', year: '', grade: '' }]
+    }));
   };
 
   const handleWorkChange = (index, e) => {
@@ -45,6 +60,29 @@ const CreatePortfolio = () => {
       updatedWork[index][name] = value;
     }
     setPortfolioData((prevData) => ({ ...prevData, workExperience: updatedWork }));
+  };
+
+  const addWorkField = () => {
+    setPortfolioData((prevData) => ({
+      ...prevData,
+      workExperience: [...prevData.workExperience, { companyName: '', jobDuration: '', jobResponsibilities: [] }]
+    }));
+  };
+
+  const handleProjectsChange = (index, value) => {
+    const updatedProjects = [...portfolioData.projects];
+    updatedProjects[index] = value;
+    setPortfolioData((prevData) => ({
+      ...prevData,
+      projects: updatedProjects
+    }));
+  };
+
+  const addProjectField = () => {
+    setPortfolioData((prevData) => ({
+      ...prevData,
+      projects: [...prevData.projects, '']
+    }));
   };
 
   const handlePhotoChange = (e) => {
@@ -95,11 +133,33 @@ const CreatePortfolio = () => {
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-600">Soft Skills:</label>
-            <input type="text" name="softSkills" value={portfolioData.skills.softSkills.join(', ')} onChange={handleSkillsChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+            {portfolioData.skills.softSkills.map((skill, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  value={skill}
+                  placeholder={`Soft Skill ${index + 1}`}
+                  onChange={(e) => handleSkillsChange(index, 'softSkills', e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                />
+                <button type="button" onClick={() => addSkillField('softSkills')} className="px-2 py-1 ml-2 text-white bg-blue-500 rounded-full">+</button>
+              </div>
+            ))}
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-600">Technical Skills:</label>
-            <input type="text" name="technicalSkills" value={portfolioData.skills.technicalSkills.join(', ')} onChange={handleSkillsChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+            {portfolioData.skills.technicalSkills.map((skill, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  value={skill}
+                  placeholder={`Technical Skill ${index + 1}`}
+                  onChange={(e) => handleSkillsChange(index, 'technicalSkills', e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                />
+                <button type="button" onClick={() => addSkillField('technicalSkills')} className="px-2 py-1 ml-2 text-white bg-blue-500 rounded-full">+</button>
+              </div>
+            ))}
           </div>
           {portfolioData.academicBackground.map((academic, index) => (
             <div key={index}>
@@ -122,6 +182,7 @@ const CreatePortfolio = () => {
               </div>
             </div>
           ))}
+          <button type="button" onClick={addAcademicField} className="px-2 py-1 mt-2 text-white bg-blue-500 rounded-full">+</button>
           {portfolioData.workExperience.map((work, index) => (
             <div key={index}>
               <h3 className="text-lg font-semibold text-gray-700">Work Experience {index + 1}</h3>
@@ -139,9 +200,21 @@ const CreatePortfolio = () => {
               </div>
             </div>
           ))}
+          <button type="button" onClick={addWorkField} className="px-2 py-1 mt-2 text-white bg-blue-500 rounded-full">+</button>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-600">Projects:</label>
-            <input type="text" name="projects" value={portfolioData.projects.join(', ')} onChange={(e) => handleChange({ target: { name: 'projects', value: e.target.value.split(', ') } })} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300" />
+            {portfolioData.projects.map((project, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  value={project}
+                  placeholder={`Project ${index + 1}`}
+                  onChange={(e) => handleProjectsChange(index, e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300"
+                />
+                <button type="button" onClick={addProjectField} className="px-2 py-1 ml-2 text-white bg-blue-500 rounded-full">+</button>
+              </div>
+            ))}
           </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-600">PDF Format:</label>

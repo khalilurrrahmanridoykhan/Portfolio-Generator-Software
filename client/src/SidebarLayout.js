@@ -25,7 +25,7 @@ const SidebarLayout = () => {
     <div className="flex min-h-screen bg-gray-100">
       <div className={`fixed inset-y-0 left-0 w-64 bg-white shadow-md transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out`}>
         <div className="p-4">
-          <h2 className="mb-4 text-2xl font-bold">Sidebar</h2>
+          <h2 className="mb-4 text-2xl font-bold">Portfolio Generator</h2>
           <ul className="space-y-2">
             <li>
               <NavLink
@@ -67,7 +67,7 @@ const SidebarLayout = () => {
             {isProfileMenuOpen && (
               <div className="absolute right-0 w-48 mt-2 bg-white rounded-md shadow-lg">
                 <NavLink to="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</NavLink>
-                <button onClick={handleLogout} className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100">Logout</button>
+                <button onClick={handleLogout} className="block w-full px-4 py-2 text-center text-gray-700 hover:bg-gray-100">Logout</button>
               </div>
             )}
           </div>

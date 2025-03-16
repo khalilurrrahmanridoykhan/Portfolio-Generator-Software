@@ -104,15 +104,35 @@ router.get('/:portfolioId/download', async (req, res) => {
 });
 
 // Update Portfolio by ID
-router.put('/:portfolioId', async (req, res) => {
-  const { token, portfolioData } = req.body;
+router.put('/:portfolioId', upload.single('photo'), async (req, res) => {
+  const { portfolioData, pdfFormat } = req.body;
+  const token = req.headers.authorization.split(' ')[1]; // Extract token from Authorization header
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const portfolio = await Portfolio.findByIdAndUpdate(req.params.portfolioId, portfolioData, { new: true });
+    const updatedPortfolioData = JSON.parse(portfolioData);
+
+    // Update the portfolio
+    const portfolio = await Portfolio.findByIdAndUpdate(
+      req.params.portfolioId,
+      {
+        ...updatedPortfolioData,
+        photoUrl: req.file ? `/uploads/${req.file.filename}` : updatedPortfolioData.photoUrl
+      },
+      { new: true }
+    );
+
+    // Generate PDF if needed
+    if (pdfFormat) {
+      const pdfFileName = path.join(__dirname, '../portfolio', `${portfolio._id}.pdf`);
+      ensureDirectoryExistence(pdfFileName);
+      await generatePortfolioPDF(portfolio, pdfFileName, pdfFormat); // Pass the selected PDF format
+    }
+
     res.status(200).json(portfolio);
   } catch (err) {
-    res.status(500).json({ message: 'Error updating portfolio' });
+    console.error('Error updating portfolio:', err); // Add detailed error logging
+    res.status(500).json({ message: 'Error updating portfolio', error: err.message });
   }
 });
 

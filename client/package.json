@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mantine/core": "^5.10.0",
+    "@mantine/hooks": "^5.10.0",
+    "@mantine/rte": "^5.10.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
@@ -11,6 +14,8 @@
     "react": "^19.0.0",
     "react-collapse": "^5.1.1",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
+    "react-quill": "^2.0.0",
     "react-router-dom": "^7.3.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"

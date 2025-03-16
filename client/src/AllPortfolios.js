@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaEdit, FaTrash, FaDownload } from 'react-icons/fa';
 
 const AllPortfolios = () => {
   const [portfolios, setPortfolios] = useState([]);
@@ -18,7 +19,9 @@ const AllPortfolios = () => {
         const response = await axios.get('http://localhost:5001/api/portfolio', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setPortfolios(response.data);
+        const userId = JSON.parse(atob(token.split('.')[1])).userId; // Decode the token to get the user ID
+        const userPortfolios = response.data.filter(portfolio => portfolio.userId === userId); // Filter portfolios by user ID
+        setPortfolios(userPortfolios);
       } catch (error) {
         console.error('Error fetching portfolios:', error);
       }
@@ -88,25 +91,27 @@ const AllPortfolios = () => {
                 <td className="px-6 py-4 text-sm text-gray-900">{portfolio.contactInfo}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{portfolio.bio}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">
-                  <button
-                    onClick={() => handleEdit(portfolio._id)}
-                    className="px-4 py-2 mr-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(portfolio._id)}
-                    className="px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                  >
-                    Delete
-                  </button>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleEdit(portfolio._id)}
+                      className="px-2 py-1 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(portfolio._id)}
+                      className="px-2 py-1 text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
                   <button
                     onClick={() => handleDownload(portfolio._id)}
-                    className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="px-2 py-1 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Download
+                    <FaDownload />
                   </button>
                 </td>
               </tr>
