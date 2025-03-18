@@ -79,16 +79,7 @@ const Profile = () => {
             className="block w-full mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={userData.password || ''}
-            onChange={handleChange}
-            className="block w-full mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          />
-        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700">Name:</label>
           <input

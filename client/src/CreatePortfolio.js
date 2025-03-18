@@ -104,7 +104,7 @@ const CreatePortfolio = () => {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
       });
       console.log('Portfolio created successfully', response.data);
-      navigate('/dashboard');
+      navigate('/all-portfolios');
     } catch (error) {
       console.error('Error creating portfolio:', error.response ? error.response.data : error.message); // Add detailed error logging
     }
